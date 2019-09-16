@@ -30,12 +30,22 @@ class Environment
   end
 
   def []=(key, value)
-    @this_environment[key] = value
+    if @parent_environment.exist?(key)
+      @parent_environment[key] = value
+    else
+      @this_environment[key] = value
+    end
   end
 
   def merge(env)
     @this_environment.merge!(env)
   end
+
+  def inspect
+    "ENV: #{@parent_environment.inspect} | #{@this_environment.inspect}"
+  end
+
+  alias_method :to_s, :inspect
 end
 
 mac = Machine.new(
@@ -49,7 +59,27 @@ mac = Machine.new(
   ), {}
 )
 
+mac2 = Machine.new(
+  Sequence.new(
+    Scope.new(
+      Assign.new(:x, Number.new(1)),
+    ),
+    Scope.new(
+      If.new(LessThan.new(Variable.new(:x), Number.new(10)),
+        Boolean.new(true),
+        Boolean.new(false)
+      )
+    )
+  ), {}
+)
+
+puts '------------------------------'
+puts 'MAC RUN'
+puts '------------------------------'
 mac.run
-require'pry-byebug';binding.pry
+puts '------------------------------'
+puts 'MAC2 RUN'
+mac2.run
+puts '------------------------------'
 
 true
