@@ -42,7 +42,7 @@ class Environment
   end
 
   def inspect
-    "ENV: #{@parent_environment.inspect} | #{@this_environment.inspect}"
+    "ENV(#{object_id}): #{@parent_environment.inspect} | #{@this_environment.inspect}"
   end
 
   alias_method :to_s, :inspect
