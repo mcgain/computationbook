@@ -15,7 +15,8 @@ class Scope < Struct.new(:body)
   end
 
   def reduce(environment)
-    [body, Environment.new(environment)]
+    reduced_body, _ = body.reduce(Environment.new(environment))
+    [reduced_body, environment]
   end
 end
 
